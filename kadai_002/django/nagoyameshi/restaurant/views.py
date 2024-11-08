@@ -619,4 +619,3 @@ def review_delete(request):
         is_success = False
 
     return JsonResponse({"is_success": is_success})
-

@@ -134,7 +134,11 @@ DEFAULT_AUTO_FIELD = "django.db.models.BigAutoField"
 
 STATIC_URL = "static/"
 
-STATICFILES_DIRS = (os.path.join(BASE_DIR, "static"),)
+# STATICFILES_DIRS = (os.path.join(BASE_DIR, "static"),) ←これをコメントアウトし、次を追加した。
+
+STATICFILES_DIRS = [
+    BASE_DIR / "static",
+]
 
 # allauth
 AUTH_USER_MODEL = "accounts.CustomUser"
