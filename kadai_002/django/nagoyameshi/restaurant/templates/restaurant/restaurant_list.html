@@ -156,7 +156,7 @@
                         </form>
                     </div>
 
-                    {% for restaurant,rate,rate_star,rate_num inrestaurant_list %}
+                    {% for restaurant,rate,rate_star,rate_num in restaurant_list %}
                         <div class="mb-3">
                             <a href="{% url 'restaurant_detail' restaurant.id %}" class="link-dark card-link">
                                 <div class="card h-100">
@@ -199,4 +199,4 @@
     </main>
 
 {% endblock %}
-{% endblock %}
+
