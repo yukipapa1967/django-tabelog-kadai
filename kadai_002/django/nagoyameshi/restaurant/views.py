@@ -5,7 +5,8 @@ from django.db.models import Q
 from django.http import JsonResponse
 from django.shortcuts import render, redirect
 from django.urls import reverse_lazy
-from django.views import generic
+from django.views import generic #, ListView  # ListViewを追加
+from django.views.generic import ListView # ListViewを追加
 
 from . import models
 from . import forms
@@ -237,6 +238,10 @@ class RestaurantListView(generic.ListView):
             category__name__icontains=category_session
         )
 
+        # デバッグ用に件数をログに出力
+        print(f"Filtered restaurant count: {restaurant_list.count()}")
+        
+        
         if int(price_session) > 0:
             restaurant_data = models.Restaurant.objects.values("id", "price")
             target_id_list = []
@@ -287,14 +292,31 @@ class RestaurantListView(generic.ListView):
                 "category_session": category_session,
                 "price_session": price_session,
                 "select_sort_session": select_sort_session,
-                "restaurant_list": zip(
-                    restaurant_list,
-                    average_rate_list,
-                    average_rate_star_list,
-                    rate_num_list,
-                ),
+                # "restaurant_list": zip(
+                #    restaurant_list,
+                #    average_rate_list,
+                #    average_rate_star_list,
+                #    rate_num_list,
+                #),
+                "restaurant_list": restaurant_list,
+                "average_rate_list": average_rate_list,
+                "average_rate_star_list": average_rate_star_list,
+                "rate_num_list": rate_num_list,
             }
         )
+
+        # デバッグ用にリストの内容をログに出力
+        print(f"restaurant_list: {restaurant_list}") 
+        print(f"average_rate_list: {average_rate_list}") 
+        print(f"average_rate_star_list: {average_rate_star_list}") 
+        print(f"rate_num_list: {rate_num_list}")
+
+
+        # データの整合性確認 
+        print(f"restaurant_list count: {len(restaurant_list)}") 
+        print(f"average_rate_list count: {len(average_rate_list)}") 
+        print(f"average_rate_star_list count: {len(average_rate_star_list)}") 
+        print(f"rate_num_list count: {len(rate_num_list)}")
 
         return context
 
@@ -425,6 +447,7 @@ class ReservationListView(generic.ListView):
 
         return queryset
 
+    '''
     def get_context_data(self, **kwargs):
         context = super(ReservationListView, self).get_context_data(**kwargs)
         context.update(
@@ -433,6 +456,52 @@ class ReservationListView(generic.ListView):
             }
         )
         return context
+    '''
+    
+    def get_context_data(self, **kwargs):
+        context = super(RestaurantListView, self).get_context_data(**kwargs)
+
+        # JSONデバッグ用に適切なデータを渡す
+        category_list = models.Category.objects.all()
+
+        # 必要なリストを用意する
+        restaurant_list = list(context['object_list'])  # 既にクエリセットとして取ったリストを使う
+        average_rate_list = []
+        average_rate_star_list = []
+        rate_num_list = []
+
+        for restaurant in restaurant_list:
+            # レストランごとの平均レート計算
+            average_rate = models.Review.objects.filter(
+                restaurant=restaurant
+            ).aggregate(Avg("rate"))["rate__avg"] or 0
+
+            average_rate_list.append(round(average_rate, 2))
+
+            if average_rate % 1 == 0:
+                average_rate_star = int(average_rate)
+            else:
+                average_rate_star = round(average_rate * 2) / 2
+            average_rate_star_list.append(average_rate_star)
+
+            # レビュー件数のカウント
+            rate_num = models.Review.objects.filter(restaurant=restaurant).count()
+            rate_num_list.append(rate_num)
+
+        # zipで複数リストをテンプレートに渡す
+        context.update({
+            "category_list": category_list,
+            "restaurant_list": zip(
+                restaurant_list, average_rate_list, average_rate_star_list, rate_num_list
+            ),
+            "keyword_session": self.request.session.get("keyword_session"),
+            "category_session": self.request.session.get("category_session"),
+            "price_session": self.request.session.get("price_session"),
+            "select_sort_session": self.request.session.get("select_sort_session"),
+        })
+
+        return context    
+    
 
 
 def reservation_delete(request):
@@ -619,3 +688,58 @@ def review_delete(request):
         is_success = False
 
     return JsonResponse({"is_success": is_success})
+
+
+class RestaurantListView(ListView):
+    model = models.Restaurant
+    template_name = "restaurant/restaurant_list.html"
+    context_object_name = "restaurant_list"
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        keyword_session = self.request.GET.get('keyword', '')
+        category_session = self.request.GET.get('category', '')
+        price_session = self.request.GET.get('price', '')
+        select_sort_session = self.request.GET.get('select_sort', '')
+
+        restaurant_list = models.Restaurant.objects.filter(
+            Q(name__icontains=keyword_session)
+            | Q(address__icontains=keyword_session)
+            | Q(category__name__icontains=keyword_session)
+        )
+        restaurant_list = restaurant_list.filter(category__name__icontains=category_session)
+
+        # デバッグ用に件数をログに出力
+        print(f"Filtered restaurant count: {restaurant_list.count()}")
+
+        average_rate_list = [4.5, 3.8, 4.2]  # 例として固定値を使用
+        average_rate_star_list = [4, 3, 4]  # 例として固定値を使用
+        rate_num_list = [10, 5, 8]  # 例として固定値を使用
+
+        context.update(
+            {
+                '''
+                "category_list": models.Category.objects.all(),
+                "keyword_session": keyword_session,
+                "category_session": category_session,
+                "price_session": price_session,
+                "select_sort_session": select_sort_session,
+                "restaurant_list": restaurant_list,
+                "average_rate_list": average_rate_list,
+                "average_rate_star_list": average_rate_star_list,
+                "rate_num_list": rate_num_list,
+                '''
+                
+                #"category_list": category_list,
+                
+                "category_list": models.Category.objects.all(),
+                "keyword_session": keyword_session,
+                "category_session": category_session,
+                "price_session": price_session,
+                "select_sort_session": select_sort_session,
+                "restaurant_list": zip(restaurant_list, average_rate_list, average_rate_star_list, rate_num_list),
+                            
+                
+            }
+        )
+        return context

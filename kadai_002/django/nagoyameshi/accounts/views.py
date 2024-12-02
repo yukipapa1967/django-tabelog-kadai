@@ -4,6 +4,7 @@ from django.views import generic, View
 
 from . import forms
 from . import models
+from .mixins import OnlyManagementUserMixin
 
 
 class UserDetailView(generic.DetailView):
@@ -83,3 +84,9 @@ class SubscribePaymentView(View):
         )
 
         return redirect(reverse_lazy("top_page"))
+
+
+class ManagementUserListView(OnlyManagementUserMixin, generic.ListView):
+    model = models.CustomUser
+    template_name = "management/user_list.html"
+    

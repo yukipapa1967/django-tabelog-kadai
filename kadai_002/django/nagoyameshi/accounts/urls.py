@@ -20,4 +20,9 @@ urlpatterns = [
         views.SubscribePaymentView.as_view(),
         name="subscribe_payment",
     ),
+    path(
+        "management/user-list",
+        views.ManagementUserListView.as_view(),
+        name="management_user_list"     
+    ),
 ]

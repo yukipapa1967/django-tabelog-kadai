@@ -132,7 +132,7 @@
                 <div class="col">
                     <div class="d-flex justify-content-between flex-wrap">
                         <p class="fs-5 mb-3">
-                            {{ restaurant_list.count }}件の店舗が見つかりました
+                            {{ restaurant_list|length }}件の店舗が見つかりました
                             <span class="fs-6"> </span>
                         </p>
                         <form method="GET" class="mb-3 sort-box">
@@ -155,6 +155,8 @@
                             <input type="hidden" name="button_type" value="select_sort">
                         </form>
                     </div>
+                    
+
 
                     {% for restaurant,rate,rate_star,rate_num in restaurant_list %}
                         <div class="mb-3">
@@ -191,6 +193,59 @@
                             </a>
                         </div>
                     {% endfor %}
+                    
+
+                    <!--
+                    {% for restaurant in restaurant_list %}
+                        <div class="mb-3">
+                            <a href="{% url 'restaurant_detail' restaurant.id %}" class="link-dark card-link">
+                                <div class="card h-100">
+                                    <div class="row g-0">
+                                        <div class="col-md-4">
+                                            {% if restaurant.photo %}
+                                                <img src="{{ restaurant.photo.url }}" class="card-img-top horizontal-card-image">
+                                            {% endif %}
+                                        </div>
+                                        <div class="col-md-8">
+                                            <div class="card-body">
+                                                <h3 class="card-title">{{ restaurant.name }}</h3>
+                                                <div class="col d-flex text-secondary">
+                                                    <div>
+                                                        {{ restaurant.category }}
+                                                    </div>
+                                                </div>
+                                                <hr class="my-2">
+                                                <p class="mb-1">
+                                                    <span class="star-rating me-1" data-rate="{{ average_rate_star_list.forloop.counter0 }}"></span>
+                                                    {{ average_rate_list.forloop.counter0 }} （{{ rate_num_list.forloop.counter0 }}件）
+                                                </p>
+                                                <div class="mb-1">
+                                                    <span>{{ restaurant.price }}</span>
+                                                </div>
+                                                <p class="card-text">{{ restaurant.description }}</p>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </a>
+                        </div>
+                    {% endfor %}
+                    -->
+
+                    
+                    <!-- デバッグ用にリストの内容を表示 -->
+                    <div>
+                        <h3>Debug Information</h3>
+                        <p>restaurant_list: {{ restaurant_list }}</p>
+                        <p>average_rate_list: {{ average_rate_list }}</p>
+                        <p>average_rate_star_list: {{ average_rate_star_list }}</p>
+                        <p>rate_num_list: {{ rate_num_list }}</p>
+                    </div>
+                
+                
+                
+
+
                     <div class="d-flex justify-content-center">
                     </div>
                 </div>

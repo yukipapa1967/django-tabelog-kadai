@@ -1,0 +1,29 @@
+{% extends "layout/base.html" %}
+
+{% load static %}
+
+{% block title %}NAGOYAMESHI{% endblock %}
+
+{% block content %}
+
+<table>
+<head>
+    <tr>
+        <th>管理番号</th>
+        <th>メールアドレス</th>
+        <th>名前</th>
+    </tr>
+</head>
+<tbody>
+{% for user in object_list %}
+<tr>
+    <td>{{ user.id }}</td>
+    <td>{{ user.email }}</td>
+    <td>{{ user.user_name }}</td>
+<tr>
+{% endfor %}
+</tbody>
+</table>
+
+{% endblock %}
+

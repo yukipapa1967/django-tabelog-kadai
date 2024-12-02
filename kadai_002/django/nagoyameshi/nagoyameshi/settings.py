@@ -152,10 +152,12 @@ AUTHENTICATION_BACKENDS = (
 
 # メールアドレス認証に変更する設定
 ACCOUNT_AUTHENTICATION_METHOD = "email"
-ACCOUNT_USERNAME_REQUIRED = False
+# ACCOUNT_USERNAME_REQUIRED = False
+ACCOUNT_USERNAME_REQUIRED = True
 
 # サインアップにメールアドレス確認を行わない設定
-ACCOUNT_EMAIL_VERIFICATION = "none"
+# ACCOUNT_EMAIL_VERIFICATION = "none"
+ACCOUNT_EMAIL_VERIFICATION = "mandatory"
 ACCOUNT_EMAIL_REQUIRED = True
 
 # ログイン/ログアウト後の遷移先を設定
@@ -173,3 +175,12 @@ ACCOUNT_FORMS = {
     "login": "accounts.forms.MyLoginForm",
     "signup": "accounts.forms.MySignupForm",
 }
+
+# メール設定
+EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'
+EMAIL_HOST = 'smtp.gmail.com'
+EMAIL_PORT = 587
+EMAIL_USE_TLS = True
+EMAIL_HOST_USER = os.environ['EMAIL_HOST_USER']
+EMAIL_HOST_PASSWORD = os.environ['EMAIL_HOST_PASSWORD']
+
