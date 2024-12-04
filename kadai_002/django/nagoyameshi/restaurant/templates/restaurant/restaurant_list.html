@@ -132,7 +132,10 @@
                 <div class="col">
                     <div class="d-flex justify-content-between flex-wrap">
                         <p class="fs-5 mb-3">
-                            {{ restaurant_list|length }}件の店舗が見つかりました
+                            
+                            <!- {{ restaurant_list|length }}件の店舗が見つかりました ->
+                            
+                            {{ restaurant_list_length }}件の店舗が見つかりました
                             <span class="fs-6"> </span>
                         </p>
                         <form method="GET" class="mb-3 sort-box">
@@ -233,7 +236,7 @@
                     -->
 
                     
-                    <!-- デバッグ用にリストの内容を表示 -->
+                    <!-- デバッグ用にリストの内容を表示 
                     <div>
                         <h3>Debug Information</h3>
                         <p>restaurant_list: {{ restaurant_list }}</p>
@@ -241,7 +244,7 @@
                         <p>average_rate_star_list: {{ average_rate_star_list }}</p>
                         <p>rate_num_list: {{ rate_num_list }}</p>
                     </div>
-                
+                    -->
                 
                 
 
