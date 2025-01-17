@@ -12,6 +12,9 @@ from . import models
 from . import forms
 
 
+from .models import CompanyInfo, TermsOfService
+
+
 class TopPageView(generic.ListView):
     """トップ画面 =================================="""
 
@@ -745,3 +748,15 @@ class RestaurantListView(ListView):
             }
         )
         return context
+
+
+
+
+def top_page(request):
+    company_info = CompanyInfo.objects.first()
+    terms_of_service = TermsOfService.objects.first()
+    return render(request, 'your_template.html', {
+        'company_info': company_info,
+        'terms_of_service': terms_of_service,
+    })
+

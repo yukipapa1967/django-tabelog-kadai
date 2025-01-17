@@ -90,3 +90,4 @@ class ManagementUserListView(OnlyManagementUserMixin, generic.ListView):
     model = models.CustomUser
     template_name = "management/user_list.html"
     
+

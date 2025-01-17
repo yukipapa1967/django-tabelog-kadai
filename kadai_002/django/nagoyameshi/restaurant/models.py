@@ -207,3 +207,15 @@ class Favorite(models.Model):
 
     def __str__(self):
         return self.restaurant.name
+
+
+class CompanyInfo(models.Model):
+    name = models.CharField(max_length=255)  # 会社名
+    address = models.TextField()             # 所在地
+    president = models.CharField(max_length=100)  # 代表者
+    capital = models.DecimalField(max_digits=10, decimal_places=2)  # 資本金
+
+class TermsOfService(models.Model):
+    content = models.TextField()  # 利用規約の内容
+    
+    
